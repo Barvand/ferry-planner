@@ -1,5 +1,6 @@
 import { FerryLeg } from "../types/ferryTrip";
 import { formatDate } from "../lib/utils";
+import Link from "next/link";
 
 function TripResult({ leg }: { leg: FerryLeg }) {
   return (
@@ -33,9 +34,12 @@ function TripResult({ leg }: { leg: FerryLeg }) {
             <p className="text-xs text-gray-400 uppercase">Ticket price</p>
             <p className="text-2xl font-bold">{leg.price}</p>
           </div>
-          <button className="bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium px-4 py-2 rounded-lg w-full">
+          <Link
+            href="/trip/"
+            className="bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium px-4 py-2 rounded-lg w-full"
+          >
             Select
-          </button>
+          </Link>
         </div>
       </div>
       {leg.notes && (
