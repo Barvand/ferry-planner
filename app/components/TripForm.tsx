@@ -2,6 +2,7 @@
 
 import { useFerrySearch } from "../hooks/useFerrySearch";
 import TripResult from "./TripResult";
+import Circle from "../icons/circle";
 
 const PORTS = ["Bergen", "Stavanger", "Kristiansand", "Hirtshals"];
 
@@ -43,7 +44,7 @@ export default function TripForm() {
 
             {/* Trip type — only shown in form mode */}
             {mode === "form" && (
-              <div className="flex border-b border-slate-200">
+              <div className="flex border-b border-slate-200 mt-2">
                 <button
                   type="button"
                   onClick={() => setTripType("round")}
@@ -61,7 +62,7 @@ export default function TripForm() {
               </div>
             )}
 
-            <div className="p-6 space-y-5">
+            <div className="p-6 space-y-5 mt-2">
               {mode === "form" ? (
                 <>
                   {/* Route */}
@@ -175,25 +176,7 @@ export default function TripForm() {
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <svg
-                      className="animate-spin h-4 w-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8z"
-                      />
-                    </svg>
+                    <Circle />
                     Finding trips…
                   </span>
                 ) : (
