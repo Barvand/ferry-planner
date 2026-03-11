@@ -16,7 +16,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    /* --foreground: #ededed; */
   }
 }
 
@@ -29,4 +29,3 @@ body {
 .ibm-plex-serif {
   font-family: "IBM Plex Serif", serif;
 }
-
