@@ -1,10 +1,16 @@
-export type FerryTrip = {
-  route: string;
+export type FerryLeg = {
   departure_port: string;
   arrival_port: string;
-  operator: string;
+  departure_date: string;
+  departure_time: string;
+  arrival_time: string;
   duration: string;
-  notes: string;
-  tripType: string;
+  operator: string;
+  price: string;
+  notes?: string;
 };
 
+export type FerryTrip = {
+  outbound: FerryLeg;
+  return: FerryLeg | null;
+};
