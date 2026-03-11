@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FerryFinder
 
-## Getting Started
+AI-powered ferry search built as a demo project.
 
-First, run the development server:
+## What it does
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Search for ferry connections between Norwegian and Danish ports.
+Enter your route, dates and passengers — an AI model finds and
+returns a realistic trip suggestion.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 14** — App Router, Server Actions
+- **OpenAI GPT-4.1-mini** — trip generation
+- **Tailwind CSS** — styling
+- **TypeScript** — fully typed
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture decisions
 
-## Learn More
+- **Server Action** for the AI call — keeps the API key server-side, never exposed to the client
+- **Custom hook** (`useFerrySearch`) — separates form state and logic from UI
+- **FormData over controlled inputs** — reduces unnecessary state, reads values on submit
+- **Typed response** (`FerryLeg` / `FerryTrip`) — ensures the AI response matches the expected shape
 
-To learn more about Next.js, take a look at the following resources:
+## Known limitations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Trip data is AI-generated, not pulled from a live booking system
+- Routes are limited to Bergen, Stavanger, Kristiansand and Hirtshals
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Running locally
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repo
+2. Install dependencies — `npm install`
+3. Add your OpenAI key to `.env.local`:
+   OPENAI_API_KEY=sk-...
+4. `npm run dev`
