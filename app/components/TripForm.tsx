@@ -3,6 +3,7 @@
 import { useFerrySearch } from "../hooks/useFerrySearch";
 import TripResult from "./TripResult";
 import Circle from "../icons/circle";
+import { useState } from "react";
 
 const PORTS = ["Bergen", "Stavanger", "Kristiansand", "Hirtshals"];
 
@@ -17,7 +18,10 @@ export default function TripForm() {
     mode,
     setMode,
     suggestion,
+    messages,
+    sendMessage,
   } = useFerrySearch();
+  const [chatInput, setChatInput] = useState("");
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -186,6 +190,58 @@ export default function TripForm() {
             </div>
           </div>
         </form>
+        {messages.length > 0 && (
+          <div className="max-w-2xl mx-auto mt-6 space-y-4">
+            {/* Message bubbles */}
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`px-4 py-3 rounded-2xl text-sm max-w-[80%] whitespace-pre-wrap ${
+                    msg.role === "user"
+                      ? "bg-slate-900 text-white"
+                      : "bg-white border border-slate-200 text-slate-700"
+                  }`}
+                >
+                  {msg.content || (
+                    <span className="animate-pulse text-slate-400">●●●</span>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* Follow-up input — only shown after a conversation has started */}
+            <div className="flex gap-2 pt-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage(chatInput);
+                    setChatInput("");
+                  }
+                }}
+                placeholder="Ask a follow-up question…"
+                className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+              />
+              <button
+                type="button"
+                disabled={loading || !chatInput.trim()}
+                onClick={() => {
+                  sendMessage(chatInput);
+                  setChatInput("");
+                }}
+                className="px-4 py-2.5 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Results */}
         {suggestion && (
