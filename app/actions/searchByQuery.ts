@@ -45,36 +45,51 @@ export async function SearchByQuery(query: string): Promise<SearchResult> {
 
   const extraction = await client.chat.completions.create({
     model: "gpt-4.1-mini",
-    temperature: 0.1,
+    temperature: 0,
     messages: [
       {
         role: "system",
-        content: `Extract ferry trip details from the user's message. Return JSON only:
+        content: `
+Extract ferry search data from the user query.
+
+IMPORTANT RULES:
+- destination MUST be one of: Bergen, Stavanger, Kristiansand, Hirtshals
+- If user says "Denmark", map it to "Hirtshals"
+- If origin is missing, return null
+- Always return valid JSON
+- NEVER return text outside JSON
+
+Format:
 {
-  "origin": "",
-  "destination": "",
-  "date": "",
-  "isReturn": false,
-  "returnDate": ""
+  "origin": string | null,
+  "destination": string,
+  "date": string | null,
+  "isReturn": boolean,
+  "returnDate": string | null
 }
-Only use these exact port names: Bergen, Stavanger, Kristiansand, Hirtshals.
-Be generous with matching — "Hirsberg", "Hirthal", "Hirshals" → "Hirtshals".
-"Christiansand", "Kristiansund" → "Kristiansand".
-If the user mentions a direction or nearby city, infer the closest port.
-For date, return ISO format YYYY-MM-DD. Today is ${new Date().toISOString().split("T")[0]}.
-If no date is mentioned, use today's date.
-If no origin is mentioned, leave it empty.
-Set isReturn to true if the user mentions "return", "round trip", "back", "both ways".
-If isReturn is true and a return date is mentioned, fill returnDate, otherwise leave it empty.`,
+`,
       },
-      { role: "user", content: query },
+      {
+        role: "user",
+        content: query,
+      },
     ],
   });
 
   const text = extraction.choices[0].message.content ?? "";
-  const clean = text.replace(/```json|```/g, "").trim();
-  const { origin, destination, date, isReturn, returnDate } = JSON.parse(clean);
 
+  let parsed;
+
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return {
+      success: false,
+      error: "Could not understand your request. Try rephrasing.",
+    };
+  }
+
+  const { origin, destination, date, isReturn, returnDate } = parsed;
   const validOrigin = VALID_PORTS.find(
     (p) => p.toLowerCase() === origin?.toLowerCase(),
   );
